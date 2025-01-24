@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewData["Title"] = "GeoFencing";
+}
+
+<style>
+ 
+
+</style>
+
+<form asp-action="DataSaved" id="form" asp-controller="Geo" >
+<div class="row mt-5 form-group" style="margin-top:50%;">
+    <div class="col d-flex justify-content-center ">
+        <button class="Btn form-group" id="PunchIn">
+            Punch In
+        </button>
+    </div>
+
+
+        <div class="col d-flex justify-content-center form-group">
+            <button class="Btn2 form-group" id="PunchOut" style="">
+                Punch Out
+            </button>
+            </div>
+   
+</div>
+
+</form>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+    $('#form').on('submit', function (e) {
+        e.preventDefault();
+            var form = $(this);
+        Swal.fire({
+            title: "Data Saved Successfully",
+            width: 600,
+            padding: "3em",
+            color: "#716add",
+            backdrop: `
+                rgba(0,0,123,0.4)
+                left top
+                no-repeat
+              `
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.off('submit');
+                form.submit();
+            }
+        });
+       
+    });
+    });
+</script>
+
+
+<script>
+
+
+
+
+    function OnOff() {
+
+        var punchIn = document.getElementById('PunchIn');
+        var punchOut = document.getElementById('PunchOut');
+
+        punchIn.disabled = true;//to be seen
+        punchOut.disabled = true;
+
+        punchIn.classList.add("disabled");
+        punchOut.classList.add("disabled");
+
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const roundTo = (num, places) => +(Math.round(num + "e" + places) + "e-" + places);
+                    const lat = roundTo(position.coords.latitude,6);
+                    const long = roundTo(position.coords.longitude,6);
+
+                    // const lat = position.coords.latitude;
+                    // const long = position.coords.longitude;
+
+                    // alert("current latitude: " +lat);
+                    // alert("current longitude: " + long);
+
+                    console.log("current latitude: " + lat);
+                    console.log("current longitude: " + long);
+
+                    const loc = @Html.Raw(Json.Serialize(ViewBag.PolyData))
+
+                        loc.forEach(loc => {
+                            console.log(loc);
+                        });
+
+                    let isInsidePolygon = false;
+                    loc.forEach(polygon => {
+                        if (IspointInPolygon({ latitude: lat, longitude: long }, polygon)) {
+                            isInsidePolygon = true;
+                            
+                        }
+                    });
+                    if (isInsidePolygon) {
+                        punchIn.disabled = false;//to be seen
+                        punchOut.disabled = false;
+
+                        punchIn.classList.remove("disabled");
+                        punchOut.classList.remove("disabled");
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "You are not in range of location of your attendance!"
+                        });
+
+                        punchIn.disabled = true;//to be disabled
+                        punchOut.disabled = true;
+
+                        punchIn.classList.add("disabled");
+                        punchOut.classList.add("disabled");
+                    }
+                    
+                },
+                function (error) {
+                    alert('Error fetching location' + error.message);
+                }
+            );
+        }
+        else{
+            alert("Geo location is not supported by this browser");
+        }
+    }
+    function IspointInPolygon(point, polygon) {
+
+        let x = point.latitude, y = point.longitude;
+        let inside = false;
+
+        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+          
+            let xi = polygon[i].latitude;
+          
+            let yi = polygon[i].longitude;
+         
+            let xj = polygon[j].latitude;
+          
+            let yj = polygon[j].longitude;
+
+            let intersect = ((yi > y) !== (yj > y)) && (x < ((xj - xi) * (y - yi)) / (yj - yi) + xi);
+            
+            if (intersect) {
+                inside = !inside;
+            }
+        }
+
+        return inside;
+    }
+        
+      
+        
+    window.onload = OnOff;
+
+</script>
+
+
+<script>
+   
+</script>
