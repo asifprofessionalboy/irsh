@@ -1,6 +1,40 @@
-     <ItemTemplate>
-                                                 <span class="text-danger"><asp:LinkButton ID="LblBonus_Attachment"  runat="server" CausesValidation="False" CommandArgument='<%# Eval("Bonus_Attachment") %>' OnClick="LblBonus_Attachment_Click"
-                                            CommandName="Download" Text='<%# Eval("Bonus_Attachment").ToString().Length>=25?Eval("Bonus_Attachment").ToString().Substring(37):Eval("Bonus_Attachment").ToString()%>' /><%--<asp:Label ID="LblPoliceVerifAttach" runat="server"  ></asp:Label>--%></span>
-                                                 <asp:FileUpload runat="server" ID="Bonus_Attachment" CssClass="form-control form-control-sm" Font-Size="X-Small" AllowMultiple="true" Height="5%"  /> 
-                                                  <asp:CustomValidator ID="CustomValidatorBonusAttach" runat="server" ErrorMessage="*" ClientValidationFunction="Validate" ControlToValidate="Bonus_Attachment" ValidationGroup="BtnSubmit" Display="Dynamic" ValidateEmptyText="true" ForeColor="Red" SetFocusOnError="true"></asp:CustomValidator>
-                                            </ItemTemplate>
+<html>
+<head>
+
+<style>
+#chart1 {
+  width: 300px;
+  margin: 0 auto;
+}
+</style>
+
+</head>
+
+<body><div id="chart">
+</div>
+
+<script>
+var options1 = {
+  chart: {
+    height: 280,
+    type: "radialBar",
+  },
+  series: [67, 84, 97, 61],
+  plotOptions: {
+    radialBar: {
+      dataLabels: {
+        total: {
+          show: true,
+          label: 'TOTAL'
+        }
+      }
+    }
+  },
+  labels: ['TEAM A', 'TEAM B', 'TEAM C', 'TEAM D']
+};
+
+new ApexCharts(document.querySelector("#chart1"), options1).render();
+
+</script></body>
+</html>  showing gift.html:36 Uncaught ReferenceError: ApexCharts is not defined
+    at gift.html:36:
