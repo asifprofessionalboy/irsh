@@ -1,2 +1,22 @@
-select distinct max(BasicRate+DARate) as MaxWage,MonthWage,WorkOrderNo,LocationNM,TotPaymentDays,WorkManCategory from App_WagesDetailsJharkhand  where  VendorCode='13732'
-and YearWage='2024' and AadharNo='802488904291' and WorkOrderNo='4700023096' order by MonthWage desc
+SELECT 
+    MAX(BasicRate + DARate) AS MaxWage,
+    MonthWage,
+    WorkOrderNo,
+    LocationNM,
+    TotPaymentDays,
+    WorkManCategory
+FROM 
+    App_WagesDetailsJharkhand
+WHERE 
+    VendorCode = '13732' 
+    AND YearWage = '2024' 
+    AND AadharNo = '802488904291' 
+    AND WorkOrderNo = '4700023096'
+GROUP BY 
+    MonthWage,
+    WorkOrderNo,
+    LocationNM,
+    TotPaymentDays,
+    WorkManCategory
+ORDER BY 
+    MonthWage DESC;
